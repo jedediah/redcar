@@ -24,7 +24,11 @@ module Redcar
         separator
         item "Cut",      Cut
         item "Copy",     Copy
-        item "Paste",    Paste
+        submenu "Paste" do
+          item "Paste",    Paste
+          item "Paste Cycle", PasteCycle
+          item "Paste History", PasteHistory
+        end
         separator
         item "Find",               Find
         item "Incremental Search", AskIncrementalSearch
@@ -54,8 +58,9 @@ module Redcar
         end
         separator
         submenu "Select" do
-          item "Line",            SelectLine
-          item "Current Scope",    SelectScopeCommand
+          item "Word",          SelectWordCommand
+          item "Line",          SelectLine
+          item "Current Scope", SelectScopeCommand
         end
       end
       

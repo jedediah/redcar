@@ -1,7 +1,7 @@
 
 module Redcar
   class EditView < Gtk::Mate::View
-    attr_accessor :snippet_inserter
+    attr_accessor :snippet_inserter, :autocompleter
 
     def initialize(options={})
       super()
@@ -33,6 +33,7 @@ module Redcar
       create_indenter
       create_autopairer
       create_snippet_inserter
+      create_autocompleter
       create_wrapper
     end
 
@@ -98,6 +99,10 @@ module Redcar
       @snippet_inserter = SnippetInserter.new(buffer)
     end
     
+    def create_autocompleter
+      @autocompleter = AutoCompleter.new(buffer)
+    end
+
     def create_wrapper
       @wrapper = Wrapper.new(self)
     end

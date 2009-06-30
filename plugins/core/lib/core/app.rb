@@ -137,6 +137,22 @@ module Redcar
     def self.clipboard
       Gtk::Clipboard.get(Gdk::Atom.intern("CLIPBOARD"))
     end
+    
+    def self.init_paste_history
+      @paste_history = Array.new(size=0,obj=nil)
+      
+      def @paste_history.push_with_limit(obj)
+        if(self.size == 20)
+          self.shift
+        end
+        self.push(obj)
+      end
+    end
+    
+    def self.paste_history
+      @paste_history
+    end
+    
 
     ENV_VARS =  %w(REDCAR_FEATURE_PROCESS RUBYLIB TM_RUBY TM_BUNDLE_SUPPORT TM_CURRENT_LINE)+
       %w(TM_CURRENT_LINE TM_LINE_INDEX TM_LINE_NUMBER TM_SELECTED_TEXT)+
@@ -145,6 +161,7 @@ module Redcar
 
     def self.set_environment_variables(bundle=nil)
       ENV_VARS.each do |var|
+        log.debug { "deleting #{var.inspect}" }
         ENV[var] = nil
       end
       @env_variables ||= []
@@ -196,20 +213,21 @@ module Redcar
             if preferences[name]
               prev_match, _ = preferences[name]
               if Gtk::Mate::Matcher.compare_match(current_scope, prev_match, match) < 0
-                preferences[name] = [match, shell_variables]
+                preferences[name] = [match, shell_variables, this_bundle.name]
               end
             else
-              preferences[name] = [match, shell_variables]
+              preferences[name] = [match, shell_variables, this_bundle.name]
             end
           end
         end
       end
       
       preferences.each do |name, pair|
-        shell_variables = pair.last
+        shell_variables, bundle_name = *pair[1..-1]
         shell_variables.each do |variable_hash|
           name = variable_hash["name"]
           @env_variables << name unless @env_variables.include?(name)
+          log.debug { "setting #{name.inspect} to #{variable_hash["value"].inspect} from #{bundle_name.inspect}" }
           ENV[name] = variable_hash["value"]
         end        
       end

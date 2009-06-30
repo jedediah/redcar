@@ -169,14 +169,12 @@ class Redcar::EditView
         true
       else
         @word, @offset, @start_word_iter = nil, nil, nil
-        line = @buf.get_slice(@buf.line_start(@buf.cursor_line),
-                              @buf.cursor_iter).reverse
-        if line =~ /([^\s]+)(\s|$)/
-          @word = $1.reverse
+        @word = @buf.word_before_cursor
+        
+        if @word
           @offset = @buf.cursor_offset
           @start_word_offset = @buf.iter(@buf.cursor_iter.offset - @word.length).offset
-        end
-        if @word
+          
           if default_snippets = SnippetInserter.default_snippets and
               snippet = choose_snippet(default_snippets[@word])
             @buf.delete(@buf.iter(@offset-@word.length),
