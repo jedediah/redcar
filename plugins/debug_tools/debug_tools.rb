@@ -27,12 +27,15 @@ module Com::RedcarIDE
         puts tab.doc.cursor_scope.inspect
       end
     end
-    
+
+    pch = PrintCommandHistory
+    pst = PrintScopeTree
+    psac = PrintScopeAtCursor
     on_start do
       main_menu "Debug" do
-        item "Print Command History", PrintCommandHistory
-        item "Print Scope Tree", PrintScopeTree
-        item "Print Scope at Cursor", PrintScopeAtCursor
+        item "Print Command History", pch
+        item "Print Scope Tree", pst
+        item "Print Scope at Cursor", psac
       end
     end
   end

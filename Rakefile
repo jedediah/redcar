@@ -21,6 +21,7 @@ BLUE_FG = "\033[1;34m"
 CLEAR_COLOURS = "\033[0m"
 
 def cputs(text, colours, opts={})
+  colours = [colours] unless colours.is_a? Array
   colours.each {|colour| print colour }
   print text
   if opts[:no_newline]

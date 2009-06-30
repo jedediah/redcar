@@ -15,8 +15,15 @@ $:.push(File.expand_path(File.dirname(__FILE__) + "/../vendor/zerenity/lib"))
 require 'zerenity'
 
 # RubyGem dependencies
-require 'rubygems'
-require 'oniguruma'
+if RUBY_VERSION >= "1.9"
+  module Oniguruma
+    ORegexp = ::Regexp
+  end
+else
+  require 'rubygems'
+  require 'oniguruma'
+end
+
 ORegexp = Oniguruma::ORegexp
 
 module Oniguruma #:nodoc:
@@ -24,9 +31,22 @@ module Oniguruma #:nodoc:
     def _dump(_)
       self.source
     end
-    def self._load(str)
-      self.new(str, :options => Oniguruma::OPTION_CAPTURE_GROUP)
-    end
+
+    if RUBY_VERSION < '1.9'
+      def self._load(str)
+        self.new(str, :options => Oniguruma::OPTION_CAPTURE_GROUP)
+      end
+    else
+      def self._load(str)
+        self.new(str)
+      end
+
+      [:sub,:sub!,:gsub,:gsub!].each do |meth|
+        define_method meth do |s, &b|
+          s.sub self, &b
+        end
+      end
+    end # if RUBY_VERSION <= '1.9'
   end
 end
 

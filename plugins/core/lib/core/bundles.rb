@@ -98,6 +98,7 @@ module Redcar
     #
     #   Redcar::Bundle.get('Ruby')
     def initialize(name, dir)
+      STDERR.puts "Loading bundle #{name}"
       @name = name
       @dir  = dir
       bus("/redcar/bundles/#{name}").data = self
@@ -174,9 +175,8 @@ module Redcar
             pref = Redcar::Plist.plist_from_xml(xml)[0]
             prefs[pref["name"]] = pref
           rescue Object => e
-            puts "There was an error loading #{preffile}"
-            puts e.message
-            puts e.backtrace[0..10]
+            STDERR.puts "There was an error loading #{preffile}"
+            STDERR.puts e.message
           end
         end
         prefs
@@ -209,9 +209,8 @@ module Redcar
             snip = Redcar::Plist.plist_from_xml(xml)[0]
             cache << Bundle.create_snippet_command(klass, snip, self)
           rescue Object => e
-            puts "There was an error loading #{snipfile}"
-            puts e.message
-            puts e.backtrace[0..10]
+            STDERR.puts "There was an error loading #{snipfile}"
+            STDERR.puts e.message
           end
         end
         cache
@@ -263,7 +262,7 @@ module Redcar
             tempinfo["dir"] = tempdir
             temps[tempinfo["name"]] = tempinfo
           rescue Object
-            puts "There was an error loading #{tempdir} templates"
+            STDERR.puts "There was an error loading #{tempdir} templates"
           end
         end
         temps
@@ -288,10 +287,8 @@ module Redcar
             hash_info["file"] = command_filename
             cache << Bundle.create_shell_command(self, hash_info)
           rescue Object => e
-            puts "There was an error loading #{command_filename}"
-            puts e.message
-            puts e.backtrace
-            exit
+            STDERR.puts "There was an error loading #{command_filename} in bundle #{@name}"
+            STDERR.puts e.message
           end
         end
         cache

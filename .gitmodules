@@ -12,7 +12,7 @@
 	url = git://github.com/danlucraft/rbwebkitgtk
 [submodule "vendor/zerenity"]
 	path = vendor/zerenity
-	url = git://github.com/danlucraft/zerenity.git
+	url = git://github.com/jedediah/zerenity.git
 [submodule "vendor/gutkumber"]
 	path = vendor/gutkumber
-	url = git://github.com/danlucraft/gutkumber.git
+	url = git://github.com/jedediah/gutkumber.git

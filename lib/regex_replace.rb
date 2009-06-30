@@ -44,7 +44,7 @@ class RegexReplace
   end
   
   def regexp_gsub(re, string, &blk)
-    if re.class.to_s == "Oniguruma::ORegexp"
+    if re.is_a? Oniguruma::ORegexp
       re.gsub(string, &blk)
     else
       left = string.dup
@@ -66,7 +66,7 @@ class RegexReplace
   end
   
   def regexp_sub(re, string, &blk)
-    if re.class.to_s == "Oniguruma::ORegexp"
+    if re.is_a? Oniguruma::ORegexp
       re.sub(string, &blk)
     else
       md = re.match(string)
@@ -91,7 +91,7 @@ class RegexReplace
   end
   
   def inspect
-    "<RegexReplace: #{@re.inspect} -> #{@replace.inspect}>"
+    "#<RegexReplace: #{@re.inspect} -> #{@replace.inspect}>"
   end
   
   private 

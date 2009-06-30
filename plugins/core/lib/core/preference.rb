@@ -74,10 +74,11 @@ module Redcar
     def self.get(name)
       if bus("/redcar/preferences/#{name}/", true)
         slot = bus("/redcar/preferences/#{name}")
-        if Preference.return_defaults
-          slot.attr_default
+        #puts "/redcar/preferences/#{name} = #{slot.inspect}" if name == 'Appearance/Tab Theme'
+        if Preference.return_defaults || slot.data.nil?
+          slot.attr_default.nil? ? '' : slot.attr_default
         else
-          slot.data == nil ? slot.attr_default : slot.data
+          slot.data
         end
       else
         raise "unknown preference: #{name}"

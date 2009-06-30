@@ -96,8 +96,10 @@ module Redcar
       hooks.each do |hook|
         hook = hook.to_s
         raise "No such hook: #{hook}" unless names.include? hook
-        hooks = (bus["/redcar/hooks/#{hook}"].data ||= [])
-        hooks << {:block => block, :caller => caller_file(caller, [__FILE__])}
+        unless cbs = bus["/redcar/hooks/#{hook}"].data
+          bus["/redcar/hooks/#{hook}"].data = cbs = []
+        end
+        cbs << {:block => block, :caller => caller_file(caller, [__FILE__])}
       end
     end
     

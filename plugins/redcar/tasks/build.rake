@@ -128,7 +128,8 @@ TXT
       missing("ruby-dbus")
     end
 
-    gems = %w(oniguruma cucumber zerenity)
+    gems = %w(cucumber zerenity)
+    gems << 'oniguruma' unless RUBY_VERSION >= '1.9'
     cputs("\nRubyGems", GREEN_FG)
     gems.each do |gem|
       begin

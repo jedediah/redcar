@@ -43,7 +43,14 @@ module FreeBASE
     # Try to copy to user directory first else FR directory
     #
     def self.copy(filespec_src, filespec_tgt)
-      require 'ftools'
+      begin
+        require 'fileutils'
+        ftools = FileUtils
+      rescue LoadError
+        require 'ftools'
+        ftools = File
+      end
+
       user_filespec_tgt = DefaultPropertiesReader.user_filename(filespec_tgt)
       if user_filespec_tgt.nil?
         filespec_tgt = File.join($FR_CODEBASE,filespec_tgt) unless File.absolute_path?(filespec_tgt)
@@ -51,8 +58,8 @@ module FreeBASE
         filespec_tgt = user_filespec_tgt
       end
       filespec_src = File.join($FR_CODEBASE,filespec_src) unless File.absolute_path?(filespec_src)
-      File.makedirs(File.dirname(filespec_tgt))
-      File.copy(filespec_src, filespec_tgt)
+      ftools.makedirs(File.dirname(filespec_tgt))
+      ftools.copy(filespec_src, filespec_tgt)
     end
   
     ##
